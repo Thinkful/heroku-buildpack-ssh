@@ -1,21 +1,4 @@
 #!/usr/bin/env bash
-# -----------------------------------------------------------------------------
-# A heroku buildpack for initialising ssh from environment variables
-# Copyright (c) 2012 - Ben Mather
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
-# details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program.  If not, see <http://www.gnu.org/licenses/>.
-# -----------------------------------------------------------------------------
 
 function indent() {
 	c='s/^/       /'
@@ -25,20 +8,16 @@ function indent() {
 	esac
 }
 
-set -e
-ENV_DIR=$3
-BUILD_DIR=$1
-SSH_DIR=$BUILD_DIR/.ssh
+env_dir=$3
+key_file="$env_dir/SSH_KEY"
 
+if [ -f "$key_file" ]; then
+	echo "-----> Running SSH private key setup"
 
-mkdir -p $SSH_DIR/
-chmod 700 $SSH_DIR/
-
-cp $ENV_DIR/SSH_KEY $SSH_DIR/id_rsa
-chmod 400 $SSH_DIR/id_rsa
-
-ssh -oStrictHostKeyChecking=no -T git@github.com 2>&1 | indent
-
-mkdir -p "$BUILD_DIR/.profile.d"
-echo "unset -v SSH_KEY" > $BUILD_DIR/.profile.d/unset-ssh-key.sh
-echo "Success copying SSH key!"
+	mkdir "$HOME/.ssh"
+	cp "$key_file" "$HOME/.ssh/id_rsa"
+	ssh -oStrictHostKeyChecking=no -T git@github.com 2>&1 | indent
+	exit 0
+else
+	echo "-----> No SSH private key"
+fi
