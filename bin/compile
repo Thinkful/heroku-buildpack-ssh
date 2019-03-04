@@ -29,11 +29,7 @@ chmod 700 $SSH_DIR/
 cp $ENV_DIR/SSH_KEY $SSH_DIR/id_rsa
 chmod 400 $SSH_DIR/id_rsa
 
-echo 'StrictHostKeyChecking=no' > $SSH_DIR/config
-chmod 600 $SSH_DIR/config
-
-echo "Running ssh-keyscan!"
-ssh-keyscan github.com >> $SSH_DIR/known_hosts 2> /dev/null
+ssh -oStrictHostKeyChecking=no -T git@github.com 2>&1 | indent
 
 mkdir -p "$BUILD_DIR/.profile.d"
 echo "unset -v SSH_KEY" > $BUILD_DIR/.profile.d/unset-ssh-key.sh
