@@ -32,6 +32,8 @@ chmod 400 $SSH_DIR/id_rsa
 echo 'StrictHostKeyChecking=no' > $SSH_DIR/config
 chmod 600 $SSH_DIR/config
 
+ssh-keyscan github.com >> $SSH_DIR/known_hosts 2> /dev/null
+
 mkdir -p "$BUILD_DIR/.profile.d"
 echo "unset -v SSH_KEY" > $BUILD_DIR/.profile.d/unset-ssh-key.sh
 echo "Success copying SSH key!"
