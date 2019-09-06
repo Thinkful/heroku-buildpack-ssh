@@ -8,6 +8,8 @@ function indent() {
 	esac
 }
 
+set -x
+
 env_dir=$3
 key_file="$env_dir/SSH_KEY"
 
