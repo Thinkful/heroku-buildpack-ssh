@@ -19,10 +19,7 @@ if [ -f "$key_file" ]; then
 	mkdir "$HOME/.ssh"
 	cp "$key_file" "$HOME/.ssh/id_rsa"
 	chmod 400 $HOME/.ssh/id_rsa
-	
-	cat $HOME/.ssh/id_rsa
-	
-	ssh -vvv -oStrictHostKeyChecking=no -T git@github.com 2>&1 | indent
+	ssh -v -oStrictHostKeyChecking=no -T git@github.com 2>&1
 	exit 0
 else
 	echo "-----> No SSH private key"
